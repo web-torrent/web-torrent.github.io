@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WebTorrent — BitTorrent in the browser: trackers, clients, the protocol</title>
+<meta name="description" content="A service page for WebTorrent, BitTorrent over WebRTC: the public WebSocket trackers and whether they are up right now, which clients speak it (qBittorrent 5.3 does), and the protocol written down. The project itself lives at webtorrent.io.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WebTorrent — trackers, clients, the protocol">
+<meta property="og:description" content="The public WebSocket trackers measured live, the clients that speak WebTorrent (qBittorrent 5.3 among them), and the protocol as data. The project is at webtorrent.io.">
+<meta property="og:url" content="https://webtorrent.org/">
+<meta property="og:image" content="https://webtorrent.org/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WebTorrent — trackers, clients, the protocol">
+<meta name="twitter:image" content="https://webtorrent.org/og.png">
+<link rel="canonical" href="https://webtorrent.org/">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' wss:; img-src 'self' data:; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+<style>
+  :root { --bg: #fbfaf7; --fg: #1e1d1a; --mut: #6b675f; --line: #ddd8cc; --ok: #1c7a3c; --bad: #b3261e; --link: #1f5fa3; --accent: #c2410c; --card: #fff; --mono: ui-monospace, Menlo, Consolas, monospace; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #15161a; --fg: #ebe9e2; --mut: #a39f94; --line: #333640; --card: #1d1f25; --link: #7fb0ff; --ok: #5fcf7f; --bad: #ff7a70; --accent: #f08c4b; } }
+  html { background: var(--bg); color: var(--fg); font: 16px/1.55 system-ui, sans-serif; } body { margin: 0; padding: 0 16px 48px; max-width: 880px; margin-inline: auto; }
+  h1 { font-size: 1.9rem; margin: 1.4rem 0 .2rem; } h1 span { color: var(--accent); } h2 { font-size: 1.15rem; margin: 1.6rem 0 .5rem; } a { color: var(--link); }
+  .lede { font-size: 1.05rem; color: var(--mut); margin: 0 0 1rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 10px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; } th { text-align: left; color: var(--mut); font-weight: 600; padding: 4px 8px; border-bottom: 1px solid var(--line); } td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; } td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .mono { font-family: var(--mono); font-size: .9em; } .mut { color: var(--mut); } .ok { color: var(--ok); font-weight: 600; } .bad { color: var(--bad); } .tiny { font-size: .85em; }
+  footer { color: var(--mut); font-size: .9rem; margin-top: 2.2rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+</style>
+</head>
+<body>
+<h1>Web<span>Torrent</span></h1>
+<p class="lede">BitTorrent in the browser: the same swarms, the same pieces and hashes, with WebRTC between peers and a WebSocket to the tracker because a browser can open nothing else. <b>The project is <a href="https://webtorrent.io/">webtorrent.io</a></b> — the library, the desktop app, the docs. This page is a service beside it: what is up, who speaks it, and the protocol written down.</p>
+
+<div class="card">
+  <h2 style="margin-top:0">Public WebSocket trackers, right now</h2>
+  <p class="tiny mut" style="margin-top:0">Browsers cannot use UDP trackers or the DHT; every browser swarm on the internet depends on these few servers. Each is asked from your browser as you read this. Full list, with the dead ones and their history: <a href="https://play-grounds.github.io/torrent-schema/apps/trackers.html">known trackers</a>.</p>
+  <table><thead><tr><th>tracker</th><th>status</th><th class="n">ms</th></tr></thead><tbody id="trk"><tr><td class="mut" colspan="3">asking…</td></tr></tbody></table>
+  <p class="tiny mut" id="trk-note"></p>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Clients that speak it</h2>
+  <table><thead><tr><th>client</th><th>since</th><th>notes</th></tr></thead><tbody>
+    <tr><td><a href="https://github.com/webtorrent/webtorrent">webtorrent</a> (JavaScript)</td><td>2014</td><td>The reference: browser and Node; the Node side also speaks TCP, uTP and the DHT, bridging the two worlds.</td></tr>
+    <tr><td><a href="https://webtorrent.io/desktop/">WebTorrent Desktop</a></td><td>2016</td><td>A desktop client on the same library.</td></tr>
+    <tr><td><a href="https://www.qbittorrent.org/">qBittorrent</a> 5.3</td><td>2026</td><td>Via <a href="https://www.libtorrent.org/">libtorrent</a> 2.1 (released July 2026). Announces to <span class="mono">wss://</span> trackers named in a torrent and answers browser peers over WebRTC; the first mainstream desktop client to do so. Some 5.2.x builds already do.</td></tr>
+    <tr><td>Anything on libtorrent 2.1</td><td>as each updates</td><td>Deluge and the other libtorrent clients inherit it with the library; distro packages lag by a release cycle.</td></tr>
+    <tr><td><a href="https://joinpeertube.org/">PeerTube</a></td><td>2018</td><td>Every instance runs its own WebSocket tracker; viewers are peers while watching.</td></tr>
+    <tr><td><a href="https://github.com/Novage/p2p-media-loader">P2P Media Loader</a> (Novage)</td><td>2019</td><td>Video streaming over WebTorrent swarms; runs a public tracker too.</td></tr>
+    <tr><td><a href="https://instant.io/">instant.io</a>, <a href="https://btorrent.xyz/">βTorrent</a></td><td>2015–16</td><td>Browser clients on the library.</td></tr>
+  </tbody></table>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">The protocol, as data</h2>
+  <p style="margin:0 0 .4rem">WebTorrent never had a BEP: it is what the library does. <a href="https://play-grounds.github.io/torrent-schema/">Torrent Schema</a> writes BitTorrent down in JSON-LD — bencode, metainfo, trackers, the peer wire — and WebTorrent as an overlay on it: the WebSocket tracker messages, the rule that the wire protocol runs over the data channel unchanged, and the things implementations get wrong (one offer per tracker, no <span class="mono">a=ice-options:trickle</span>, an answer is not a connection). A codec reads the schema and reproduces real torrents, real tracker answers and real peer sessions byte for byte — webtorrent's, and qBittorrent 5.3's.</p>
+  <p class="tiny mut" style="margin:0"><a href="https://play-grounds.github.io/torrent-schema/apps/peer.html">A peer written from the schema</a>, in a tab, fetching and playing a film from a public swarm with no torrent library at all.</p>
+</div>
+
+<footer>
+  <p>This domain is held for the WebTorrent project and is theirs for the asking: <a href="https://github.com/web-torrent/web-torrent.github.io/issues">open an issue</a>. Nothing here is affiliated with or endorsed by the project; the name is theirs, the page is a service. Source: <a href="https://github.com/web-torrent/web-torrent.github.io">web-torrent/web-torrent.github.io</a>. Trackers listed are asked from your browser only; nothing is logged.</p>
+</footer>
+<script type="module" src="status.js"></script>
+</body>
+</html>

@@ -35,7 +35,7 @@
 
 <div class="card">
   <h2 style="margin-top:0">Public WebSocket trackers, right now</h2>
-  <p class="tiny mut" style="margin-top:0">Browsers cannot use UDP trackers or the DHT; every browser swarm on the internet depends on these few servers. Each is asked from your browser as you read this. Full list, with the dead ones and their history: <a href="https://play-grounds.github.io/torrent-schema/apps/trackers.html">known trackers</a>.</p>
+  <p class="tiny mut" style="margin-top:0">Browsers cannot use UDP trackers or the DHT; every browser swarm on the internet depends on these few servers. Each is asked from your browser as you read this. Full list, with the dead ones and their history: <a href="https://torrent-schema.github.io/apps/trackers.html">known trackers</a>.</p>
   <table><thead><tr><th>tracker</th><th>status</th><th class="n">ms</th></tr></thead><tbody id="trk"><tr><td class="mut" colspan="3">asking…</td></tr></tbody></table>
   <p class="tiny mut" id="trk-note"></p>
 </div>
@@ -55,8 +55,8 @@
 
 <div class="card">
   <h2 style="margin-top:0">The protocol, as data</h2>
-  <p style="margin:0 0 .4rem">WebTorrent never had a BEP: it is what the library does. <a href="https://play-grounds.github.io/torrent-schema/">Torrent Schema</a> writes BitTorrent down in JSON-LD — bencode, metainfo, trackers, the peer wire — and WebTorrent as an overlay on it: the WebSocket tracker messages, the rule that the wire protocol runs over the data channel unchanged, and the things implementations get wrong (one offer per tracker, no <span class="mono">a=ice-options:trickle</span>, an answer is not a connection). A codec reads the schema and reproduces real torrents, real tracker answers and real peer sessions byte for byte — webtorrent's, and qBittorrent 5.3's.</p>
-  <p class="tiny mut" style="margin:0"><a href="https://play-grounds.github.io/torrent-schema/apps/peer.html">A peer written from the schema</a>, in a tab, fetching and playing a film from a public swarm with no torrent library at all.</p>
+  <p style="margin:0 0 .4rem">WebTorrent never had a BEP: it is what the library does. <a href="https://torrent-schema.github.io/">Torrent Schema</a> writes BitTorrent down in JSON-LD — bencode, metainfo, trackers, the peer wire — and WebTorrent as an overlay on it: the WebSocket tracker messages, the rule that the wire protocol runs over the data channel unchanged, and the things implementations get wrong (one offer per tracker, no <span class="mono">a=ice-options:trickle</span>, an answer is not a connection). A codec reads the schema and reproduces real torrents, real tracker answers and real peer sessions byte for byte — webtorrent's, and qBittorrent 5.3's.</p>
+  <p class="tiny mut" style="margin:0"><a href="https://torrent-schema.github.io/apps/peer.html">A peer written from the schema</a>, in a tab, fetching and playing a film from a public swarm with no torrent library at all.</p>
 </div>
 
 <footer>
